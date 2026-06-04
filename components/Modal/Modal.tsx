@@ -1,51 +1,36 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { createPortal } from "react-dom";
-import css from "./Modal.module.css";
+import css from './Modal.module.css';
+import React, { useEffect } from 'react';
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+type ModalProps = {
   children: React.ReactNode;
-}
+  onClose: () => void;
+};
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+const Modal = ({ children, onClose }: ModalProps) => {
   useEffect(() => {
-    if (!isOpen) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') {
+        onClose();
+      }
     };
 
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-
-    const prevOverflow = document.body.style.overflow;
-    const prevPadding = document.body.style.paddingRight;
-
-    document.body.style.overflow = "hidden";
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
-
-    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
 
     return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.paddingRight = prevPadding;
-      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
     };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
-  if (typeof window === "undefined") return null;
-
-  return createPortal(
-    <div className={css.backdrop} onClick={onClose}>
-      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+  }, [onClose]);
+  return (
+    <div onClick={onClose} className={css.backdrop}>
+      <div className={css.modal} onClick={e => e.stopPropagation()}>
         {children}
       </div>
-    </div>,
-    document.body
+    </div>
   );
-}
+};
+
+export default Modal;

@@ -1,44 +1,37 @@
-"use client";
-
-import ReactPaginate from "react-paginate";
 import css from "./Pagination.module.css";
+import ReactPaginate from "react-paginate";
 
 interface PaginationProps {
-  page: number;
+  currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (selectedItem: { selected: number }) => void;
 }
 
 export default function Pagination({
-  page,
+  currentPage,
   totalPages,
   onPageChange,
 }: PaginationProps) {
-  if (!totalPages || totalPages <= 1) return null;
-
-  const safePage =
-    Number.isFinite(page) && page > 0 ? Math.min(page, totalPages) : 1;
-
-  const handlePageClick = (event: { selected: number }) => {
-    const newPage = event.selected + 1;
-    onPageChange(newPage);
-  };
-
   return (
     <ReactPaginate
-      breakLabel="..."
+      pageCount={totalPages}
+      pageRangeDisplayed={3}
+      marginPagesDisplayed={1}
+      onPageChange={onPageChange}
+      forcePage={currentPage - 1}
+      containerClassName={css.pagination}
+      pageClassName={css.pageItem}
+      pageLinkClassName={css.pageLink}
+      activeClassName={css.active}
+      previousClassName={css.pageItem}
+      nextClassName={css.pageItem}
+      previousLinkClassName={css.pageLink}
+      nextLinkClassName={css.pageLink}
+      disabledClassName={css.disabled}
+      breakClassName={css.pageItem}
+      breakLinkClassName={css.pageLink}
       previousLabel="←"
       nextLabel="→"
-      pageRangeDisplayed={5}
-      marginPagesDisplayed={1}
-      pageCount={totalPages}
-      onPageChange={handlePageClick}
-      forcePage={safePage - 1} 
-      containerClassName={css.pagination}
-      activeClassName={css.active}
-      previousClassName={css.previous}
-      nextClassName={css.next}
-      disabledClassName={css.disabled}
     />
   );
 }
