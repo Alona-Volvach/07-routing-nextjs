@@ -48,12 +48,14 @@ export async function createNote(
   return res.data;
 }
 
-export async function deleteNote(id: string): Promise<void> {
-  await axios.delete<Note>(`/notes/${id}`, {
+export async function deleteNote(id: string): Promise<Note> {
+  const res = await axios.delete<Note>(`/notes/${id}`, {
     headers: {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`,
     },
   });
+
+  return res.data;
 }
 
 export async function getNoteById(id: string): Promise<Note> {
