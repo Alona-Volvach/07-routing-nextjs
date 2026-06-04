@@ -22,6 +22,7 @@ export default function NotePreviewClient() {
     queryKey: ["note", id],
     queryFn: () => getNoteById(id),
     enabled: !!id,
+    refetchOnMount: false,
   });
 
   return (
@@ -39,6 +40,9 @@ export default function NotePreviewClient() {
           <h2>{note.title}</h2>
           <p>{note.content}</p>
           <p>{note.tag}</p>
+          <p>
+            Created: {new Date(note.createdAt).toLocaleString()}
+          </p>
         </div>
       )}
     </Modal>
